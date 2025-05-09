@@ -1,0 +1,29 @@
+{
+  "name": "gitbook2epub",
+  "version": "1.0.0",
+  "description": "将GitBook项目转换为标准EPUB电子书格式的纯Node.js工具",
+  "main": "gitbook2epub.js",
+  "bin": {
+    "gitbook2epub": "gitbook2epub.js"
+  },
+  "scripts": {
+    "start": "node gitbook2epub.js",
+    "convert": "node gitbook2epub.js"
+  },
+  "keywords": [
+    "gitbook",
+    "epub",
+    "ebook",
+    "markdown",
+    "pandoc",
+    "converter"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}

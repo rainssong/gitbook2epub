@@ -1,0 +1,39 @@
+# GitBook转EPUB配置文件
+# 请将此文件复制为您GitBook项目根目录下的epub-config.yaml并修改为您需要的设置
+
+# 基本设置
+coverImage: .gitbook/assets/cover.png  # 封面图片，相对于GitBook根目录
+css: custom-style.css  # 自定义CSS，相对于GitBook根目录
+outputFilename: output.epub  # 输出文件名
+
+# 内容设置
+tocDepth: 3  # 目录深度
+chapterPattern: true  # 是否为每个章节生成独立的标题页
+includeFrontMatter: true  # 是否包含前言等前置内容
+embedFonts: true  # 是否嵌入字体
+
+# 字体设置（如果embedFonts为true）
+fonts:
+  - name: Noto Serif SC
+    file: fonts/NotoSerifSC-Regular.otf
+    weight: normal
+    style: normal
+  - name: Noto Sans SC
+    file: fonts/NotoSansSC-Regular.otf
+    weight: normal
+    style: normal
+
+# 自定义过滤器
+excludeFiles:
+  - draft-*.md  # 使用通配符排除草稿文件
+  - private/*.md  # 排除某个目录
+
+# 额外文件（按顺序添加到EPUB开头）
+extraFiles:
+  - disclaimer.md  # 免责声明
+  - preface.md  # 序言
+
+# 高级设置
+metadata:  # 这些设置会覆盖metadata.yaml中的同名设置
+  title: 书籍标题
+  author: 作者名 

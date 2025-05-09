@@ -1,0 +1,24 @@
+---
+# GitBook2EPUB元数据配置模板
+# 将此文件复制到GitBook根目录下并命名为metadata.yaml
+
+# 基本信息
+title: 书籍标题
+author: 作者名称
+date: 2024
+lang: zh-CN
+
+# 选填信息
+subtitle: 书籍副标题
+publisher: 出版方
+rights: © 2024 版权所有
+description: 书籍简介，将显示在电子书的元数据中
+
+# 外观设置
+cover-image: .gitbook/assets/cover.jpg
+css: custom-style.css
+
+# 其他标识
+subject: [标签1, 标签2, 标签3]
+identifier: ISBN号或其他唯一标识符
+--- 

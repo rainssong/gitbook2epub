@@ -1,0 +1,206 @@
+/* GitBook to EPUB 默认样式 */
+body {
+  font-family: "Noto Serif SC", "Source Han Serif CN", "Noto Sans CJK SC", serif;
+  text-align: justify;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0 1em;
+  background-color: #ffffff;
+  color: #333333;
+}
+
+/* 标题样式 */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Noto Sans SC", "Source Han Sans CN", "Noto Sans CJK SC", sans-serif;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: #000000;
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 2em;
+  border-bottom: 1px solid #eaecef;
+  padding-bottom: 0.3em;
+  text-align: center;
+  page-break-before: always;
+}
+
+h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid #eaecef;
+  padding-bottom: 0.2em;
+  page-break-before: always;
+}
+
+h3 {
+  font-size: 1.25em;
+}
+
+h4 {
+  font-size: 1.1em;
+}
+
+/* 段落样式 */
+p {
+  margin-bottom: 1em;
+  text-indent: 2em;
+}
+
+/* 列表样式 */
+ul, ol {
+  margin-bottom: 1em;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+/* 图片样式 */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
+}
+
+img.cover {
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+}
+
+/* 表格样式 */
+table {
+  border-collapse: collapse;
+  margin: 1em 0;
+  width: 100%;
+  overflow-x: auto;
+  display: block;
+}
+
+th, td {
+  padding: 0.5em 1em;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f6f8fa;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+
+/* 代码样式 */
+pre, code {
+  font-family: "Source Code Pro", "Fira Code", "Consolas", monospace;
+  background-color: #f6f8fa;
+  border-radius: 3px;
+}
+
+code {
+  padding: 0.2em 0.4em;
+  font-size: 0.9em;
+}
+
+pre {
+  padding: 1em;
+  overflow-x: auto;
+  line-height: 1.5;
+  margin: 1em 0;
+}
+
+pre code {
+  padding: 0;
+  background-color: transparent;
+}
+
+/* 引用样式 */
+blockquote {
+  margin: 1em 0;
+  padding: 0 1em;
+  color: #6a737d;
+  border-left: 0.25em solid #dfe2e5;
+}
+
+blockquote p {
+  text-indent: 0;
+}
+
+/* 链接样式 */
+a {
+  color: #0366d6;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* 水平线样式 */
+hr {
+  height: 0.25em;
+  padding: 0;
+  margin: 1.5em 0;
+  background-color: #e1e4e8;
+  border: 0;
+}
+
+/* 脚注样式 */
+.footnote {
+  font-size: 0.9em;
+  color: #6a737d;
+}
+
+/* 页眉页脚 */
+@page {
+  margin: 2.5cm 2cm 2cm 2cm;
+}
+
+.title-page {
+  text-align: center;
+}
+
+/* 适配深色模式 */
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #c9d1d9;
+    background-color: #0d1117;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: #e6edf3;
+  }
+  
+  code, pre {
+    background-color: #161b22;
+  }
+  
+  a {
+    color: #58a6ff;
+  }
+  
+  blockquote {
+    color: #8b949e;
+    border-left-color: #30363d;
+  }
+  
+  th, td {
+    border-color: #30363d;
+  }
+  
+  th {
+    background-color: #161b22;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #161b22;
+  }
+  
+  hr {
+    background-color: #30363d;
+  }
+} 
