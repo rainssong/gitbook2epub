@@ -95,12 +95,12 @@ for (let i = 0; i < args.length; i++) {
 // 如果第一个参数是完整路径，则直接使用
 const gitbookDir = path.isAbsolute(gitbookName) 
   ? gitbookName 
-  : path.resolve('gitbooks', gitbookName);
+  : path.resolve(gitbookName);
 
 // 如果第二个参数是完整路径，则直接使用
 const outputPath = outputFileName && path.isAbsolute(outputFileName)
   ? outputFileName
-  : path.resolve('output', outputFileName || path.basename(gitbookDir) + '.epub');
+  : path.resolve(outputFileName || path.basename(gitbookDir) + '.epub');
 
 // 临时文件集合，用于在程序结束时清理
 const tempFiles = [];
@@ -602,6 +602,45 @@ function cleanupTempFiles() {
   }
 }
 
+// 检查是否安装了pandoc
+function checkPandocInstallation() {
+  try {
+    execSync('pandoc --version', { stdio: 'ignore' });
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+// 显示pandoc安装指导
+function showPandocInstallGuide() {
+  log.error('未找到 pandoc 命令。');
+  log.info('');
+  log.info('请安装 pandoc 后再试：');
+  log.info('');
+  
+  if (process.platform === 'win32') {
+    log.info('Windows 安装方法：');
+    log.info('1. 访问: https://pandoc.org/installing.html');
+    log.info('2. 下载 Windows 安装包并安装');
+    log.info('3. 或使用 Chocolatey: choco install pandoc');
+    log.info('4. 或使用 winget: winget install JohnMacFarlane.Pandoc');
+  } else if (process.platform === 'darwin') {
+    log.info('macOS 安装方法：');
+    log.info('1. 使用 Homebrew: brew install pandoc');
+    log.info('2. 或访问: https://pandoc.org/installing.html');
+  } else {
+    log.info('Linux 安装方法：');
+    log.info('1. Ubuntu/Debian: sudo apt-get install pandoc');
+    log.info('2. CentOS/RHEL: sudo yum install pandoc');
+    log.info('3. Arch Linux: sudo pacman -S pandoc');
+    log.info('4. 或访问: https://pandoc.org/installing.html');
+  }
+  
+  log.info('');
+  log.info('安装完成后，请重新运行此工具。');
+}
+
 // 主函数
 async function main() {
   try {
@@ -613,11 +652,8 @@ async function main() {
     checkExists(gitbookDir, true, 'directory');
     
     // 检查是否安装了pandoc
-    try {
-      execSync('pandoc --version', { stdio: 'ignore' });
-    } catch (error) {
-      log.error('未找到 pandoc 命令。请安装 pandoc 后再试。');
-      log.error('安装指南: https://pandoc.org/installing.html');
+    if (!checkPandocInstallation()) {
+      showPandocInstallGuide();
       process.exit(1);
     }
     
@@ -673,4 +709,4 @@ process.on('SIGINT', () => {
 });
 
 // 运行主函数
-main(); 
+main();

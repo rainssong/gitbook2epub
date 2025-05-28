@@ -17,6 +17,22 @@
 - [Node.js](https://nodejs.org/) (v12.0.0或更高版本)
 - [Pandoc](https://pandoc.org/installing.html) (v2.0或更高版本)
 
+### Pandoc 安装指南
+
+#### Windows
+- 方法1：访问 [Pandoc官网](https://pandoc.org/installing.html) 下载安装包
+- 方法2：使用 Chocolatey: `choco install pandoc`
+- 方法3：使用 winget: `winget install JohnMacFarlane.Pandoc`
+
+#### macOS
+- 方法1：使用 Homebrew: `brew install pandoc`
+- 方法2：访问 [Pandoc官网](https://pandoc.org/installing.html) 下载安装包
+
+#### Linux
+- Ubuntu/Debian: `sudo apt-get install pandoc`
+- CentOS/RHEL: `sudo yum install pandoc`
+- Arch Linux: `sudo pacman -S pandoc`
+
 ## 安装
 
 ### 全局安装
@@ -34,6 +50,9 @@ cd gitbook2epub
 
 # 安装依赖
 npm install
+
+# 检查系统依赖
+npm run check-deps
 
 # 可选：将命令链接到全局
 npm link

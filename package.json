@@ -10,7 +10,10 @@
     "start": "node gitbook2epub.js",
     "convert": "node gitbook2epub.js",
     "gui": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "check-deps": "node check-dependencies.js",
+    "check-pandoc": "pandoc --version",
+    "install-pandoc-help": "node -e \"console.log('请访问 https://pandoc.org/installing.html 安装 pandoc')\""
   },
   "keywords": [
     "gitbook",
