@@ -11,6 +11,9 @@
     "convert": "node gitbook2epub.js",
     "gui": "electron .",
     "build": "electron-builder",
+    "build-win": "electron-builder --win",
+    "build-linux": "electron-builder --linux",
+    "build-mac": "electron-builder --mac",
     "check-deps": "node check-dependencies.js",
     "check-pandoc": "pandoc --version",
     "install-pandoc-help": "node -e \"console.log('请访问 https://pandoc.org/installing.html 安装 pandoc')\""
@@ -27,11 +30,39 @@
   "license": "MIT",
   "dependencies": {
     "bootstrap": "^5.3.6",
-    "electron": "^36.2.1",
-    "electron-builder": "^26.0.12",
     "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "electron": "^36.2.1",
+    "electron-builder": "^26.0.12"
   },
   "engines": {
     "node": ">=12.0.0"
+  },
+  "build": {
+    "appId": "com.gitbook2epub.app",
+    "productName": "GitBook2EPUB",
+    "directories": {
+      "output": "release"
+    },
+    "electronDownload": {
+      "cache": "C:\\Users\\huangying\\AppData\\Local\\electron\\Cache"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "gitbook2epub.js",
+      "check-dependencies.js",
+      "default-style.css",
+      "gui/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "portable"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.exe"
+    }
   }
 }

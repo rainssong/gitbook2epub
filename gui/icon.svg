@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="256" height="256" fill="#2c3e50" rx="20"/>
+  
+  <!-- 书本外形 -->
+  <rect x="64" y="48" width="128" height="160" fill="#ecf0f1" rx="8"/>
+  <rect x="64" y="48" width="16" height="160" fill="#34495e" rx="8 0 0 8"/>
+  
+  <!-- 书本线条 -->
+  <line x1="96" y1="80" x2="176" y2="80" stroke="#bdc3c7" stroke-width="2"/>
+  <line x1="96" y1="100" x2="176" y2="100" stroke="#bdc3c7" stroke-width="2"/>
+  <line x1="96" y1="120" x2="176" y2="120" stroke="#bdc3c7" stroke-width="2"/>
+  <line x1="96" y1="140" x2="160" y2="140" stroke="#bdc3c7" stroke-width="2"/>
+  
+  <!-- EPUB 标识 -->
+  <text x="128" y="180" text-anchor="middle" fill="#2c3e50" font-family="Arial, sans-serif" font-size="14" font-weight="bold">EPUB</text>
+  
+  <!-- 转换箭头 -->
+  <path d="M 40 128 L 56 120 L 56 136 Z" fill="#e74c3c"/>
+  <path d="M 200 128 L 216 120 L 216 136 Z" fill="#27ae60"/>
+</svg>

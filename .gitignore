@@ -10,6 +10,7 @@ yarn-error.log
 temp/
 gitbooks/
 output/
+release/
 
 # 忽略临时文件
 .temp-*
@@ -18,4 +19,7 @@ output/
 
 # 忽略系统文件
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# 忽略打包文件
+dist/
