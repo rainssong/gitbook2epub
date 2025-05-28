@@ -2,13 +2,15 @@
   "name": "gitbook2epub",
   "version": "1.0.0",
   "description": "将GitBook项目转换为标准EPUB电子书格式的纯Node.js工具",
-  "main": "gitbook2epub.js",
+  "main": "main.js",
   "bin": {
     "gitbook2epub": "gitbook2epub.js"
   },
   "scripts": {
     "start": "node gitbook2epub.js",
-    "convert": "node gitbook2epub.js"
+    "convert": "node gitbook2epub.js",
+    "gui": "electron .",
+    "build": "electron-builder"
   },
   "keywords": [
     "gitbook",
@@ -21,6 +23,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "bootstrap": "^5.3.6",
+    "electron": "^36.2.1",
+    "electron-builder": "^26.0.12",
     "js-yaml": "^4.1.0"
   },
   "engines": {

@@ -41,10 +41,33 @@ npm link
 
 ## 使用方法
 
+### 图形界面使用
+
+```bash
+# 启动图形界面
+npm run gui
+```
+
+图形界面提供了以下功能：
+- 选择GitBook源目录
+- 选择自定义的metadata.yaml文件（可选）
+- 选择自定义的style.css文件（可选）
+- 选择EPUB输出位置
+- 实时显示转换进度
+
 ### 命令行使用
 
 ```bash
-gitbook2epub [GitBook目录路径] [输出EPUB文件路径]
+gitbook2epub [GitBook目录路径] [输出EPUB文件路径] [选项]
+```
+
+可用选项：
+- `--metadata`或`-m`: 指定自定义元数据文件路径
+- `--style`或`-s`: 指定自定义样式文件路径
+
+示例：
+```bash
+gitbook2epub ./my-gitbook ./output.epub --metadata ./custom-metadata.yaml --style ./custom-style.css
 ```
 
 如果不提供参数，工具将默认使用当前目录作为GitBook项目，并以当前目录名称生成EPUB文件。

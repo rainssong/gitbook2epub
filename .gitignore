@@ -9,6 +9,7 @@ yarn-error.log
 .gitbook/
 temp/
 gitbooks/
+output/
 
 # 忽略临时文件
 .temp-*

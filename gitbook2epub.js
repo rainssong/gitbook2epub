@@ -32,10 +32,41 @@ const log = {
 
 // 命令行参数处理
 const args = process.argv.slice(2);
-const gitbookName = args[0] || '.';
-const gitbookDir = path.resolve('gitbooks', gitbookName);
-const outputFileName = args[1] || path.basename(gitbookDir) + '.epub';
-const outputPath = path.resolve('output', outputFileName);
+
+// 解析命令行参数
+let gitbookName = '.';
+let outputFileName = '';
+let metadataPath = '';
+let stylePath = '';
+
+// 提取标准参数(gitbookName, outputFileName)和选项(--metadata, --style)
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === '--metadata' || args[i] === '-m') {
+    if (i + 1 < args.length) {
+      metadataPath = args[i + 1];
+      i++; // 跳过下一个参数
+    }
+  } else if (args[i] === '--style' || args[i] === '-s') {
+    if (i + 1 < args.length) {
+      stylePath = args[i + 1];
+      i++; // 跳过下一个参数
+    }
+  } else if (!gitbookName || gitbookName === '.') {
+    gitbookName = args[i];
+  } else if (!outputFileName) {
+    outputFileName = args[i];
+  }
+}
+
+// 如果第一个参数是完整路径，则直接使用
+const gitbookDir = path.isAbsolute(gitbookName) 
+  ? gitbookName 
+  : path.resolve('gitbooks', gitbookName);
+
+// 如果第二个参数是完整路径，则直接使用
+const outputPath = outputFileName && path.isAbsolute(outputFileName)
+  ? outputFileName
+  : path.resolve('output', outputFileName || path.basename(gitbookDir) + '.epub');
 
 // 临时文件集合，用于在程序结束时清理
 const tempFiles = [];
@@ -376,8 +407,9 @@ function processMarkdownHeaders(content, firstHeaderLevel) {
 }
 
 // 读取和处理元数据
-function processMetadata(gitbookDir) {
-  const metadataPath = path.join(gitbookDir, 'metadata.yaml');
+function processMetadata(gitbookDir, customMetadataPath = '') {
+  // 使用自定义元数据路径（如果提供），否则使用默认路径
+  const metadataPath = customMetadataPath || path.join(gitbookDir, 'metadata.yaml');
   
   // 默认元数据
   const defaultMetadata = {
@@ -390,7 +422,7 @@ function processMetadata(gitbookDir) {
   };
   
   if (!fs.existsSync(metadataPath)) {
-    log.warn('未找到 metadata.yaml 文件，将使用默认元数据');
+    log.warn(`未找到元数据文件 ${metadataPath}，将使用默认元数据`);
     
     // 创建临时元数据文件
     const tempMetadataPath = path.join(os.tmpdir(), 'gitbook2epub-metadata-' + Date.now() + '.yaml');
@@ -463,20 +495,25 @@ function convertToEpub(fileList, metadata, options) {
     }
   }
   
-  // 添加CSS样式
-  if (metadata.data.css) {
+  // 添加自定义样式（命令行参数优先）
+  if (options.customStylePath && fs.existsSync(options.customStylePath)) {
+    args.push('--css', options.customStylePath);
+    log.info(`使用命令行指定的样式文件: ${options.customStylePath}`);
+  } 
+  // 其次使用metadata中指定的样式
+  else if (metadata.data.css) {
     const cssPath = path.resolve(gitbookDir, metadata.data.css);
     if (fs.existsSync(cssPath)) {
       args.push('--css', cssPath);
-      log.info(`使用自定义样式: ${cssPath}`);
+      log.info(`使用元数据中指定的样式: ${cssPath}`);
     } else {
-      log.warn(`样式文件不存在: ${cssPath}`);
+      log.warn(`元数据中指定的样式文件不存在: ${cssPath}`);
     }
   }
   
-  // 使用默认样式（如果存在）
+  // 最后使用默认样式（如果存在且未指定其他样式）
   const defaultCssPath = path.join(__dirname, 'default-style.css');
-  if (fs.existsSync(defaultCssPath) && !metadata.data.css) {
+  if (fs.existsSync(defaultCssPath) && !options.customStylePath && !metadata.data.css) {
     args.push('--css', defaultCssPath);
     log.info('使用默认样式文件');
   }
@@ -558,7 +595,7 @@ async function main() {
     }
     
     // 读取和处理元数据
-    const metadata = processMetadata(gitbookDir);
+    const metadata = processMetadata(gitbookDir, metadataPath);
     
     // 按照章节结构提取文件
     const chapterStructure = extractFilesByChapter(summaryPath, gitbookDir);
@@ -577,7 +614,8 @@ async function main() {
     // 执行转换，传入SUMMARY.md中的最大层级数作为tocDepth
     convertToEpub(fileList, metadata, {
       outputPath: outputPath,
-      tocDepth: chapterStructure.maxLevel
+      tocDepth: chapterStructure.maxLevel,
+      customStylePath: stylePath
     });
     
   } catch (error) {

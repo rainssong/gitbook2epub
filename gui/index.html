@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitBook转EPUB工具</title>
+  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+    .main-container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .path-display {
+      background-color: #f8f9fa;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ced4da;
+      margin-bottom: 10px;
+      word-break: break-all;
+      min-height: 38px;
+    }
+    .log-area {
+      background-color: #f8f9fa;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      padding: 10px;
+      height: 200px;
+      overflow-y: auto;
+      font-family: monospace;
+      margin-top: 20px;
+      white-space: pre-wrap;
+    }
+    h1 {
+      color: #0d6efd;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    #progress-container {
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center">GitBook转EPUB工具</h1>
+    
+    <div class="main-container">
+      <div class="row">
+        <div class="col-md-12">
+          <form id="convertForm">
+            <!-- GitBook目录选择 -->
+            <div class="form-group">
+              <label for="gitbookPath">GitBook目录：</label>
+              <div class="input-group">
+                <div id="gitbookPathDisplay" class="path-display form-control"></div>
+                <button type="button" id="selectGitbookBtn" class="btn btn-primary">选择目录</button>
+              </div>
+            </div>
+            
+            <!-- metadata.yaml文件选择 -->
+            <div class="form-group">
+              <label for="metadataPath">metadata.yaml（可选）：</label>
+              <div class="input-group">
+                <div id="metadataPathDisplay" class="path-display form-control"></div>
+                <button type="button" id="selectMetadataBtn" class="btn btn-primary">选择文件</button>
+              </div>
+            </div>
+            
+            <!-- style.css文件选择 -->
+            <div class="form-group">
+              <label for="stylePath">style.css（可选）：</label>
+              <div class="input-group">
+                <div id="stylePathDisplay" class="path-display form-control"></div>
+                <button type="button" id="selectStyleBtn" class="btn btn-primary">选择文件</button>
+              </div>
+            </div>
+            
+            <!-- 转换按钮 -->
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <button type="button" id="saveBtn" class="btn btn-success me-md-2">选择保存位置并转换</button>
+            </div>
+            
+            <!-- 进度条和日志输出 -->
+            <div id="progress-container">
+              <h5>转换进度</h5>
+              <div class="progress mb-3">
+                <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" 
+                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+              </div>
+              
+              <h5>日志输出</h5>
+              <div id="log" class="log-area"></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      // 路径存储变量
+      let gitbookPath = '';
+      let metadataPath = '';
+      let stylePath = '';
+      let outputPath = '';
+      
+      // DOM元素
+      const gitbookPathDisplay = document.getElementById('gitbookPathDisplay');
+      const metadataPathDisplay = document.getElementById('metadataPathDisplay');
+      const stylePathDisplay = document.getElementById('stylePathDisplay');
+      const selectGitbookBtn = document.getElementById('selectGitbookBtn');
+      const selectMetadataBtn = document.getElementById('selectMetadataBtn');
+      const selectStyleBtn = document.getElementById('selectStyleBtn');
+      const saveBtn = document.getElementById('saveBtn');
+      const progressContainer = document.getElementById('progress-container');
+      const progressBar = document.getElementById('progress-bar');
+      const logArea = document.getElementById('log');
+      
+      // 选择GitBook目录
+      selectGitbookBtn.addEventListener('click', async () => {
+        const path = await window.electronAPI.selectDirectory();
+        if (path) {
+          gitbookPath = path;
+          gitbookPathDisplay.textContent = path;
+        }
+      });
+      
+      // 选择metadata.yaml文件
+      selectMetadataBtn.addEventListener('click', async () => {
+        const path = await window.electronAPI.selectFile('yaml');
+        if (path) {
+          metadataPath = path;
+          metadataPathDisplay.textContent = path;
+        }
+      });
+      
+      // 选择style.css文件
+      selectStyleBtn.addEventListener('click', async () => {
+        const path = await window.electronAPI.selectFile('css');
+        if (path) {
+          stylePath = path;
+          stylePathDisplay.textContent = path;
+        }
+      });
+      
+      // 选择保存位置并开始转换
+      saveBtn.addEventListener('click', async () => {
+        // 验证至少选择了GitBook目录
+        if (!gitbookPath) {
+          alert('请至少选择GitBook目录');
+          return;
+        }
+        
+        // 选择保存路径
+        const savePath = await window.electronAPI.saveFile();
+        if (!savePath) return;
+        
+        outputPath = savePath;
+        
+        // 显示进度区域
+        progressContainer.style.display = 'block';
+        progressBar.style.width = '0%';
+        progressBar.textContent = '0%';
+        logArea.textContent = '开始转换...\n';
+        
+        // 监听转换进度
+        const cleanup = window.electronAPI.onConversionProgress((message) => {
+          // 追加日志
+          logArea.textContent += message + '\n';
+          // 自动滚动到底部
+          logArea.scrollTop = logArea.scrollHeight;
+          
+          // 尝试从消息中解析进度
+          const progressMatch = message.match(/(\d+)%/);
+          if (progressMatch) {
+            const progress = parseInt(progressMatch[1]);
+            if (!isNaN(progress)) {
+              progressBar.style.width = `${progress}%`;
+              progressBar.textContent = `${progress}%`;
+            }
+          }
+        });
+        
+        try {
+          // 开始转换
+          const result = await window.electronAPI.convertGitbook({
+            gitbookPath,
+            outputPath,
+            metadataPath: metadataPath || undefined,
+            stylePath: stylePath || undefined
+          });
+          
+          if (result.success) {
+            progressBar.style.width = '100%';
+            progressBar.textContent = '100%';
+            logArea.textContent += `\n${result.message}`;
+            alert('转换完成！');
+          } else {
+            alert(`转换失败: ${result.message}`);
+          }
+        } catch (error) {
+          alert(`发生错误: ${error.message}`);
+          logArea.textContent += `\n错误: ${error.message}`;
+        } finally {
+          cleanup(); // 清理事件监听器
+        }
+      });
+    });
+  </script>
+</body>
+</html>
