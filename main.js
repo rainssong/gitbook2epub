@@ -99,18 +99,16 @@ ipcMain.handle('convert-gitbook', async (event, options) => {
         args.push(options.outputPath);
       }
       
-      if (options.metadataPath) {
-        args.push('--metadata');
-        args.push(options.metadataPath);
-      }
-      
       if (options.stylePath) {
         args.push('--style');
         args.push(options.stylePath);
-      }
-
-      console.log(`执行命令: node gitbook2epub.js ${args.join(' ')}`);
-      const convertProcess = spawn('node', ['gitbook2epub.js', ...args]);
+      }      console.log(`执行命令: node gitbook2epub.js ${args.join(' ')}`);
+      const convertProcess = spawn('node', ['gitbook2epub.js', ...args], {
+        env: {
+          ...process.env,
+          GITBOOK2EPUB_GUI_MODE: 'true'
+        }
+      });
       
       // 发送进度更新
       convertProcess.stdout.on('data', (data) => {

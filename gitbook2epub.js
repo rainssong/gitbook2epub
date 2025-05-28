@@ -21,13 +21,47 @@ const colors = {
   magenta: '\x1b[35m'
 };
 
+// 检测是否在GUI模式下运行（通过环境变量或父进程）
+const isGUIMode = process.env.GITBOOK2EPUB_GUI_MODE === 'true' || 
+                  process.ppid && process.title.includes('electron');
+
 // 日志输出
 const log = {
-  info: (msg) => console.log(colors.cyan + msg + colors.reset),
-  success: (msg) => console.log(colors.green + msg + colors.reset),
-  warn: (msg) => console.log(colors.yellow + msg + colors.reset),
-  error: (msg) => console.log(colors.red + msg + colors.reset),
-  fileItem: (msg) => console.log(colors.magenta + '- ' + colors.reset + msg)
+  info: (msg) => {
+    if (isGUIMode) {
+      console.log(msg);
+    } else {
+      console.log(colors.cyan + msg + colors.reset);
+    }
+  },
+  success: (msg) => {
+    if (isGUIMode) {
+      console.log(msg);
+    } else {
+      console.log(colors.green + msg + colors.reset);
+    }
+  },
+  warn: (msg) => {
+    if (isGUIMode) {
+      console.log('警告: ' + msg);
+    } else {
+      console.log(colors.yellow + msg + colors.reset);
+    }
+  },
+  error: (msg) => {
+    if (isGUIMode) {
+      console.log('错误: ' + msg);
+    } else {
+      console.log(colors.red + msg + colors.reset);
+    }
+  },
+  fileItem: (msg) => {
+    if (isGUIMode) {
+      console.log('- ' + msg);
+    } else {
+      console.log(colors.magenta + '- ' + colors.reset + msg);
+    }
+  }
 };
 
 // 命令行参数处理
@@ -294,7 +328,7 @@ function createChapterFiles(chapterStructure) {
         fs.writeFileSync(outputFile, modifiedContent, 'utf8');
         fileList.push(outputFile);
         tempFiles.push(outputFile);
-        log.info(`处理前言文件: ${item.title}`);
+        log.info(`✓ 处理前言文件: ${item.title}`);
       }
     });
     
