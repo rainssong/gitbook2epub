@@ -12,10 +12,7 @@
 
 ```
 my-gitbook/
-├── .gitbook/
-│   └── assets/
-│       ├── cover.png
-│       └── other-images/
+├── cover.png
 ├── chapter1/
 │   ├── section1.md
 │   └── section2.md
@@ -57,7 +54,7 @@ language: zh-CN
 publisher: 自出版
 description: 这是一本关于某主题的详细指南，适合初学者和进阶学习者。
 subject: 技术, 编程, 指南
-cover-image: .gitbook/assets/cover.png
+cover-image: cover.jpg
 css: custom-style.css
 toc-title: 目录
 ...
@@ -160,19 +157,20 @@ ebook-convert my-ebook.epub my-ebook.pdf
 
 解决方案：确保您的CSS指定了支持中文的字体，如 'Noto Serif SC'。您也可以使用嵌入字体功能：
 
-1. 在`epub-config.yaml`中添加：
+1. 在 `epub-config.yaml`中添加：
+
    ```yaml
    embedFonts: true
    fonts:
      - name: Noto Serif SC
        file: fonts/NotoSerifSC-Regular.otf
    ```
-
 2. 将字体文件放在相应位置
 
 ### 问题：图片不显示
 
 解决方案：
+
 - 确保图片路径正确（相对于Markdown文件的位置）
 - 检查图片格式是否支持（推荐JPG和PNG）
 - 确保SUMMARY.md中引用的所有文件都存在
@@ -180,6 +178,7 @@ ebook-convert my-ebook.epub my-ebook.pdf
 ### 问题：章节层级结构不正确
 
 解决方案：
+
 - 检查SUMMARY.md的格式，确保使用正确的标题级别（##用于章，*用于节）
 - 确保缩进正确，每个节点下的子节点应该有额外的缩进
 
@@ -212,4 +211,4 @@ ebook-convert my-ebook.epub my-ebook.pdf
 
 1. 查看本文档和README.md
 2. 检查常见问题解答
-3. 提交GitHub Issue（如果有） 
+3. 提交GitHub Issue（如果有）

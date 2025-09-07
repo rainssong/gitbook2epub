@@ -2,7 +2,7 @@
 # 请将此文件复制为您GitBook项目根目录下的epub-config.yaml并修改为您需要的设置
 
 # 基本设置
-coverImage: .gitbook/assets/cover.png  # 封面图片，相对于GitBook根目录
+coverImage: cover.png  # 封面图片，相对于GitBook根目录
 css: custom-style.css  # 自定义CSS，相对于GitBook根目录
 outputFilename: output.epub  # 输出文件名
 
